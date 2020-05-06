@@ -25,8 +25,8 @@ public class login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        edtId = findViewById(R.id.editText_ID);
-        edtPwd = findViewById(R.id.editText_PWD);
+        editId = findViewById(R.id.editText_ID);
+        editPw = findViewById(R.id.editText_PWD);
 
         Button btn_reg = (Button) findViewById(R.id.btn_register);
         btn_reg.setPaintFlags(btn_reg.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -58,13 +58,13 @@ public class login extends AppCompatActivity {
     }
 
     public void linearOnClick(View v) {
-        inputMethodManager.hideSoftInputFromWindow(edtId.getWindowToken(), 0);
-        inputMethodManager.hideSoftInputFromWindow(edtPwd.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(editId.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(editPw.getWindowToken(), 0);
     }
 
     private void Login() {
-        String userId = edtId.getText().toString().trim();
-        String password = edtPwd.getText().toString().trim();
+        String userId = editId.getText().toString().trim();
+        String password = editPw.getText().toString().trim();
 //        String userEmail = "";
 
         ContentValues contentValues = new ContentValues();
@@ -92,7 +92,7 @@ public class login extends AppCompatActivity {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    EditText edtId;
-    EditText edtPwd;
+    EditText editId;
+    EditText editPw;
     InputMethodManager inputMethodManager;
 }
