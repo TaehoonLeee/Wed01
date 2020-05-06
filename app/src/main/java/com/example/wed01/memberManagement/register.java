@@ -23,7 +23,7 @@ public class register extends AppCompatActivity {
         setContentView(R.layout.register);
 
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-//        editId = findViewById(R.id.etID);
+
         editPassword = findViewById(R.id.etPassword);
         editEmail = findViewById(R.id.etEmail);
         editPasswordConfirm = findViewById(R.id.etPasswordConfirm);
@@ -60,12 +60,6 @@ public class register extends AppCompatActivity {
         else if(! (editPassword.getText().toString().equals(editPasswordConfirm.getText().toString()))) {
             Toast.makeText(getApplicationContext(), "패스워드가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
         }
-//        else if(editEmail.getText().toString().length()==0){
-//            Toast.makeText(getApplicationContext(),"이메일을 입력해 주세요",Toast.LENGTH_SHORT).show();
-//        }
-//        else if(!Patterns.EMAIL_ADDRESS.matcher(editEmail.getText().toString()).matches()){
-//            Toast.makeText(getApplicationContext(),"이메일 형식이 올바르지 않습니다.",Toast.LENGTH_SHORT).show();
-//        }
         else {
             createUser();
         }
