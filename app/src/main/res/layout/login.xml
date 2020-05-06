@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:background="#00ff0000"
-                    android:text="Find"
+                    android:text="FIND"
                     android:textColor="#000000"/>
             </LinearLayout>
         </LinearLayout>
