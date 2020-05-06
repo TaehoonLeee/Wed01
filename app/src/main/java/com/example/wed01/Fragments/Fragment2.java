@@ -53,12 +53,12 @@ public class Fragment2 extends Fragment {
             series.setColor(0xff56b7f1);
 
             if (jsonArray.length() >= 10) {
-                for (int i = jsonArray.length() - 10; i <= jsonArray.length() - 1; i++) {
+                for (int i = jsonArray.length() - 10; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     time = object.getString("time");
                     humidity = BigDecimal.valueOf(object.getDouble("humidity")).floatValue();
                     Log.d("Fragment2", String.valueOf(humidity));
-                    series.addPoint(new ValueLinePoint(time, humidity)); // key값 변경
+                    series.addPoint(new ValueLinePoint(time, humidity));
                 }
             }
             else {
@@ -67,7 +67,7 @@ public class Fragment2 extends Fragment {
                     time = object.getString("time");
                     humidity = BigDecimal.valueOf(object.getDouble("humidity")).floatValue();
                     Log.d("Fragment2", String.valueOf(humidity));
-                    series.addPoint(new ValueLinePoint(time, humidity)); // key값 변경
+                    series.addPoint(new ValueLinePoint(time, humidity));
                 }
             }
 
@@ -98,7 +98,7 @@ public class Fragment2 extends Fragment {
         }
     };
 
-    float humidity;
-    static String time;
-    ValueLineChart chart;
+    private float humidity;
+    private String time;
+    private ValueLineChart chart;
 }
