@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF"
+    tools:context="com.example.wed01.memberManagement.register"
+    android:onClick="linearOnClick">
+
+    <LinearLayout
+        android:id="@+id/linearlayout_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:onClick="linearOnClick">
+
+        <ImageView
+            android:layout_width="158dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/signup_2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create account to start smart heater system!"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/findlay2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/linearlayout_register"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:onClick="linearOnClick">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!--<EditText-->
+                <!--android:id="@+id/etID"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="35dp"-->
+                <!--android:background="@drawable/edit_round"-->
+                <!--android:textColorHint="#cccaca"-->
+                <!--android:inputType="textPassword"-->
+                <!--android:textColor="#000000"-->
+                <!--android:ems="15"-->
+                <!--android:layout_marginBottom="20dp"-->
+                <!--android:hint=" ID" />-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@+id/findlay2"
+                android:layout_marginBottom="7dp"
+                android:text="Email"
+                android:textColor="#323232"
+                android:textSize="15sp"
+                android:typeface="monospace" />
+
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:background="@drawable/edit_round"
+                android:textColorHint="#cccaca"
+                android:textColor="#000000"
+                android:ems="15"
+                android:layout_marginBottom="20dp"
+                android:hint=" Email"
+                android:paddingLeft="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Password"
+                android:textSize="15sp"
+                android:typeface="monospace"
+                android:textColor="#323232"
+                android:layout_marginBottom="7dp"/>
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:background="@drawable/edit_round"
+                android:hint=" Password"
+                android:textColorHint="#cccaca"
+                android:textColor="#000000"
+                android:ems="15"
+                android:layout_marginBottom="10dp"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"/>
+
+            <EditText
+                android:id="@+id/etPasswordConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:background="@drawable/edit_round"
+                android:hint=" Password Confirm"
+                android:textColorHint="#cccaca"
+                android:textColor="#000000"
+                android:ems="15"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_below="@id/findlay2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00ff0000"
+            android:textColor="#000000"
+            android:text="Sign Up" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:background="#00ff0000"
+            android:textColor="#000000"
+            android:text="Cancel" />
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

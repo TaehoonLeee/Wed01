@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="#ffffff">
+
+    <TextView
+        android:id="@+id/hopeTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:text="온도조절기"
+        android:textColor="#000000" />
+
+    <SeekBar
+        android:id="@+id/SeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="5"
+        android:progressDrawable="@drawable/seekbar_seekbar1"
+        android:thumb="@drawable/seekbar_seekbar1_thumb" />
+
+    <Button
+        android:id="@+id/DataSendBtn"
+        android:layout_width="119dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/SeekBar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="146dp"
+        android:layout_marginLeft="146dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="146dp"
+        android:layout_marginRight="146dp"
+        android:text="온도 설정" />
+
+    <TextView
+        android:id="@+id/TextView"
+        android:layout_width="401dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/DataSendBtn"
+        android:layout_marginTop="20dp"
+        android:text="온도"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+</LinearLayout>
