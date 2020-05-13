@@ -34,6 +34,9 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".MainActivityB"/>
+        <activity
+            android:name=".Arduino.ArduinoRegister"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>

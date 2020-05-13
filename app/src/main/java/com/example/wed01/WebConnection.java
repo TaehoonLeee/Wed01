@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.Map;
 
 public class WebConnection {
-    public String request(String _url, ContentValues _params) {
+    public String request(String _url, ContentValues _params, String _method) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         StringBuffer sbParams = new StringBuffer();
@@ -45,7 +45,7 @@ public class WebConnection {
             urlConnection = (HttpURLConnection) url.openConnection();
 
             // [2-1]. urlConn 설정.
-            urlConnection.setRequestMethod("POST"); // URL 요청에 대한 메소드 설정 : POST.
+            urlConnection.setRequestMethod(_method); // URL 요청에 대한 메소드 설정 : POST.
             urlConnection.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
             urlConnection.setConnectTimeout(2 * 1000);

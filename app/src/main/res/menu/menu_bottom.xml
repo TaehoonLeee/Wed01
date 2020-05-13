@@ -5,7 +5,7 @@
     <item
         android:id="@+id/tab1"
         app:showAsAction="always"
-        android:icon="@drawable/main_list_icon"
+        android:icon="@drawable/home"
         android:enabled="true"
         android:checked="true"
         android:title="메뉴"/>

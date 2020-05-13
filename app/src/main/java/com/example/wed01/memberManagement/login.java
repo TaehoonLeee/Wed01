@@ -73,7 +73,7 @@ public class login extends AppCompatActivity {
 //        contentValues.put("EMAIL", userEmail);
 
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("login", contentValues);
+            AsyncHttp asyncHttp = new AsyncHttp("login", contentValues, "POST");
             String result = asyncHttp.execute().get();
             JSONObject object = new JSONObject(result);
 

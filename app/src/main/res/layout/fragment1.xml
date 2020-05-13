@@ -49,4 +49,10 @@
         android:textColor="#000000"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/ArduinoRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="등록" />
+
 </LinearLayout>

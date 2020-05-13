@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void receiveRtData() {
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("phone/data", new ContentValues());
+            AsyncHttp asyncHttp = new AsyncHttp("phone/data", new ContentValues(), "POST");
             String result = asyncHttp.execute().get();
             JSONArray jsonArray = new JSONArray(result);
 
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", String.valueOf(humidity));
 
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("arduino/data", contentValues);
+            AsyncHttp asyncHttp = new AsyncHttp("arduino/data", contentValues, "POST");
             asyncHttp.execute();
         } catch (Exception e) { e.printStackTrace(); }
     }

@@ -74,7 +74,7 @@ public class register extends AppCompatActivity {
         contentValues.put("PW", PW);
 
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("register", contentValues);
+            AsyncHttp asyncHttp = new AsyncHttp("register", contentValues, "POST");
             String result = asyncHttp.execute().get();
             JSONObject object = new JSONObject(result);
 

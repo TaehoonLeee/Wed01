@@ -45,7 +45,7 @@ public class Fragment2 extends Fragment {
 
     private void receiveRtData() {
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("phone/data", new ContentValues());
+            AsyncHttp asyncHttp = new AsyncHttp("phone/data", new ContentValues(), "POST");
             String result = asyncHttp.execute().get();
             JSONArray jsonArray = new JSONArray(result);
 

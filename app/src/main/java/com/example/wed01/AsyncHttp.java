@@ -6,9 +6,10 @@ import android.os.AsyncTask;
 public class AsyncHttp extends AsyncTask<Void, Void, String> {
     public AsyncHttp() { super(); }
 
-    public AsyncHttp(String _url, ContentValues _contentValues) {
+    public AsyncHttp(String _url, ContentValues _contentValues, String _method) {
         this.url += _url;
         this.contentValues = _contentValues;
+        this.method = _method;
     }
 
     @Override
@@ -40,11 +41,12 @@ public class AsyncHttp extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... voids) {
         String result;
         WebConnection webConnection = new WebConnection();
-        result = webConnection.request(url, contentValues);
+        result = webConnection.request(url, contentValues, method);
 
         return result;
     }
 
     private String url = "https://wendsteam06.herokuapp.com/";
     private ContentValues contentValues;
+    private String method;
 }
