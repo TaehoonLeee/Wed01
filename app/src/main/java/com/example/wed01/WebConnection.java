@@ -45,18 +45,27 @@ public class WebConnection {
             urlConnection = (HttpURLConnection) url.openConnection();
 
             // [2-1]. urlConn 설정.
-            urlConnection.setRequestMethod(_method); // URL 요청에 대한 메소드 설정 : POST.
-            urlConnection.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-            urlConnection.setConnectTimeout(2 * 1000);
-            urlConnection.connect();//연결 수행
+            if(_method.equals("POST")) {
+                urlConnection.setRequestMethod(_method); // URL 요청에 대한 메소드 설정 : POST.
+                urlConnection.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
+                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+                urlConnection.setConnectTimeout(2 * 1000);
+                urlConnection.connect();//연결 수행
 
-            // [2-2]. parameter 전달 및 데이터 읽어오기.
-            String strParams = sbParams.toString(); //sbParams에 정리한 파라미터들을 스트링으로 저장. 예)id=id1&pw=123;
-            OutputStream os = urlConnection.getOutputStream();
-            os.write(strParams.getBytes("UTF-8")); // 출력 스트림에 출력.
-            os.flush(); // 출력 스트림을 플러시(비운다)하고 버퍼링 된 모든 출력 바이트를 강제 실행.
-            os.close(); // 출력 스트림을 닫고 모든 시스템 자원을 해제.
+                // [2-2]. parameter 전달 및 데이터 읽어오기.
+                String strParams = sbParams.toString(); //sbParams에 정리한 파라미터들을 스트링으로 저장. 예)id=id1&pw=123;
+                OutputStream os = urlConnection.getOutputStream();
+                os.write(strParams.getBytes("UTF-8")); // 출력 스트림에 출력.
+                os.flush(); // 출력 스트림을 플러시(비운다)하고 버퍼링 된 모든 출력 바이트를 강제 실행.
+                os.close(); // 출력 스트림을 닫고 모든 시스템 자원을 해제.
+            }
+            else {
+                urlConnection.setRequestMethod(_method); // URL 요청에 대한 메소드 설정 : GET.
+//                urlConnection.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setConnectTimeout(2 * 1000);
+                urlConnection.connect();//연결 수행
+            }
 
             //입력 스트림 생성
 

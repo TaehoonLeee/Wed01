@@ -46,7 +46,7 @@ public class AsyncHttp extends AsyncTask<Void, Void, String> {
         return result;
     }
 
-    private String url = "https://wendsteam06.herokuapp.com/";
+    private String url = "http://e0015981.ngrok.io/v2/";
     private ContentValues contentValues;
     private String method;
 }
