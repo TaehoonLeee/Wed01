@@ -13,8 +13,11 @@ import android.widget.Toast;
 
 import com.example.wed01.AsyncHttp;
 import com.example.wed01.MainActivity;
+import com.example.wed01.MainActivityB;
 import com.example.wed01.R;
+import com.example.wed01.memberManagement.login;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -28,50 +31,71 @@ public class ArduinoRegister extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.arduino_register);
 
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+        Intent prev = getIntent();
+
+        Bundle bundle = prev.getExtras();
+
+        isNew = bundle.getBoolean("isNew");
+
         ArduinoRegisterBtn = (Button) findViewById(R.id.registerArduino);
 
         spinnerArray = new ArrayList<>();
-        spinnerArray.add("ID1");
-        spinnerArray.add("ID2");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(adapter);
+        getArduinoIDList();
 
         ArduinoRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String arduinoID = spinner.getSelectedItem().toString();
-                Intent intent = new Intent();
-                intent.putExtra("arduinoID", arduinoID);
-                finish();
+                if( isNew ) {
+                    Intent intent = new Intent(ArduinoRegister.this, MainActivityB.class);
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("ARDUINOID", arduinoID);
+                    intent.putExtras(bundle);
+
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent();
+                    intent.putExtra("arduinoID", arduinoID);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
     }
 
     public void getArduinoIDList() {
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("login", new ContentValues(), "GET");
+            AsyncHttp asyncHttp = new AsyncHttp("arduino/unregistered", new ContentValues(), "GET");
             String result = asyncHttp.execute().get();
-            JSONObject object = new JSONObject(result);
+            JSONObject jsonObject = new JSONObject(result);
+            JSONArray jsonArray = jsonObject.getJSONArray("ardList");
 
-            if(object.getInt("resultCode") == 200) {
-                String msg = object.getString("msg");
-                Toast.makeText(ArduinoRegister.this, msg, Toast.LENGTH_SHORT).show();
+            if(jsonArray.length() != 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    String arduinoID = object.getString("ID");
+                    spinnerArray.add(arduinoID);
+                }
 
-                Intent intent = new Intent(ArduinoRegister.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
             }
             else {
-                String msg = object.getString("msg");
-                Toast.makeText(ArduinoRegister.this, msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "현재 미등록된 기기가 없습니다.", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) { e.printStackTrace(); }
     }
 
+    Spinner spinner;
+    boolean isNew = false;
     List<String> spinnerArray;
     Button ArduinoRegisterBtn;
 }
