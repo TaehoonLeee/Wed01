@@ -1,6 +1,7 @@
 package com.example.wed01.Fragments;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -18,9 +19,6 @@ import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,6 +30,7 @@ import com.example.wed01.Arduino.ArduinoRegister;
 import com.example.wed01.AsyncHttp;
 import com.example.wed01.R;
 import com.sdsmdg.harjot.crollerTest.Croller;
+import com.skydoves.powermenu.CircularEffect;
 import com.skydoves.powermenu.MenuAnimation;
 import com.skydoves.powermenu.OnMenuItemClickListener;
 import com.skydoves.powermenu.PowerMenu;
@@ -76,13 +75,25 @@ public class Fragment1 extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment1, container, false);
 
+        thisContext = container.getContext();
+
         setHasOptionsMenu(true);
 
         currentTemp = (TextView) viewGroup.findViewById(R.id.TextView);
         hopeTemp = (TextView) viewGroup.findViewById(R.id.hopeTemp);
         DataSendButton = (Button) viewGroup.findViewById(R.id.DataSendBtn);
-        ArduinoRegisterBtn = (Button) viewGroup.findViewById(R.id.ArduinoRegister);
         powerImage = (ImageView) viewGroup.findViewById(R.id.powerImage);
+        plusImage = (ImageView) viewGroup.findViewById(R.id.plusImage);
+        plusImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(powerMenu.isShowing()) {
+                    powerMenu.dismiss();
+                }
+
+                powerMenu.showAsDropDown(v);
+            }
+        });
 
         powerDrawable = getResources().getDrawable(R.drawable.power);
         map = ((BitmapDrawable)powerDrawable).getBitmap();
@@ -91,7 +102,6 @@ public class Fragment1 extends Fragment{
         croller = (Croller) viewGroup.findViewById(R.id.croller);
         initCroller();
 
-//        initContextMenu();
         initPowerMenu();
 
         croller.setOnProgressChangedListener(new Croller.onProgressChangedListener() {
@@ -113,37 +123,7 @@ public class Fragment1 extends Fragment{
         thread.setDaemon(true);
         thread.start();
 
-        ArduinoRegisterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isNew = false;
-                Intent intent = new Intent(getActivity(), ArduinoRegister.class);
-                Bundle bundle = new Bundle();
-
-                bundle.putBoolean("isNew", isNew);
-                intent.putExtras(bundle);
-
-                startActivityForResult(intent, 1);
-            }
-        });
-
         return viewGroup;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu,inflater);
-        inflater.inflate(R.menu.menu_top,menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int curId = item.getItemId();
-
-        switch (curId) {
-            case R.id.top_menu : contextMenuDialogFragment.show(getChildFragmentManager(), ContextMenuDialogFragment.TAG);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -260,18 +240,20 @@ public class Fragment1 extends Fragment{
     }
 
     private void initPowerMenu() {
-        PowerMenuItem close = new PowerMenuItem("Close", R.drawable.close);
-        PowerMenuItem plus = new PowerMenuItem("Add Heater", R.drawable.plus);
-        PowerMenuItem delete = new PowerMenuItem("Delete Heater", R.drawable.delete);
+        PowerMenuItem close = new PowerMenuItem("Close", R.drawable.close, false);
+        PowerMenuItem plus = new PowerMenuItem("Add Heater", R.drawable.plus, false);
+        PowerMenuItem delete = new PowerMenuItem("Delete Heater", R.drawable.delete, false);
 
         List<PowerMenuItem> powerMenuItems = new ArrayList<>();
         powerMenuItems.add(close);
         powerMenuItems.add(plus);
         powerMenuItems.add(delete);
 
-        powerMenu = new PowerMenu.Builder(getContext())
+        powerMenu = new PowerMenu.Builder(thisContext)
                 .addItemList(powerMenuItems)
-                .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT)
+                .setAutoDismiss(true)
+                .setAnimation(MenuAnimation.ELASTIC_CENTER)
+                .setCircularEffect(CircularEffect.BODY)
                 .setMenuRadius(10f)
                 .setMenuShadow(10f)
                 .setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
@@ -282,15 +264,26 @@ public class Fragment1 extends Fragment{
                 .setSelectedMenuColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
                 .setOnMenuItemClickListener(onMenuItemClickListener)
                 .build();
-
-        powerMenu.showAsDropDown(viewGroup);
     }
 
     private OnMenuItemClickListener<PowerMenuItem> onMenuItemClickListener = new OnMenuItemClickListener<PowerMenuItem>() {
         @Override
         public void onItemClick(int position, PowerMenuItem item) {
             Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-            powerMenu.setSelectedPosition(position); // change selected item
+            switch(item.getTitle()) {
+                case "Add Heater" : {
+                    boolean isNew = false;
+                    Intent intent = new Intent(getActivity(), ArduinoRegister.class);
+                    Bundle bundle = new Bundle();
+
+                    bundle.putBoolean("isNew", isNew);
+                    intent.putExtras(bundle);
+
+                    startActivityForResult(intent, 1);
+
+                    break;
+                }
+            }
             powerMenu.dismiss();
         }
     };
@@ -300,9 +293,10 @@ public class Fragment1 extends Fragment{
     Croller croller;
     Bitmap map;
     Drawable powerDrawable;
-    ImageView powerImage;
+    ImageView powerImage, plusImage;
     TextView currentTemp;
     TextView hopeTemp;
-    Button DataSendButton, ArduinoRegisterBtn;
+    Button DataSendButton;
     String arduinoID;
+    Context thisContext;
 }
