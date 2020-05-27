@@ -2,20 +2,24 @@ package com.example.wed01.memberManagement;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.wed01.Arduino.ArduinoRegister;
 import com.example.wed01.AsyncHttp;
-import com.example.wed01.MainActivity;
 import com.example.wed01.MainActivityB;
 import com.example.wed01.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class login extends AppCompatActivity {
@@ -27,6 +31,9 @@ public class login extends AppCompatActivity {
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         editId = findViewById(R.id.editText_ID);
         editPw = findViewById(R.id.editText_PWD);
+        imageView = findViewById(R.id.imageView);
+
+        imageView.setColorFilter(Color.parseColor("#4e4e4e"), PorterDuff.Mode.SRC_IN);
 
         Button btn_reg = (Button) findViewById(R.id.btn_register);
         btn_reg.setPaintFlags(btn_reg.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -43,7 +50,7 @@ public class login extends AppCompatActivity {
         btn_find.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivityB.class);
+                Intent intent = new Intent(getApplicationContext(), find.class);
                 startActivity(intent);
             }
         });
@@ -53,6 +60,9 @@ public class login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Login();
+//                Intent intent = new Intent(login.this, MainActivityB.class);
+//                startActivity(intent);
+//                finish();
             }
         });
     }
@@ -73,7 +83,7 @@ public class login extends AppCompatActivity {
 //        contentValues.put("EMAIL", userEmail);
 
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("login", contentValues, "POST");
+            AsyncHttp asyncHttp = new AsyncHttp("user/login", contentValues, "POST");
             String result = asyncHttp.execute().get();
             JSONObject object = new JSONObject(result);
 
@@ -81,9 +91,31 @@ public class login extends AppCompatActivity {
                 String msg = object.getString("msg");
                 Toast.makeText(login.this, msg, Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(login.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                JSONArray jsonArray = object.getJSONArray("arduino");
+
+                if( jsonArray.length() != 0) {
+                    Intent intent = new Intent(login.this, MainActivityB.class);
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("ARDUINOID", arduinoID);
+                    intent.putExtras(bundle);
+
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Toast.makeText(login.this, "등록된 기기가 없습니다. 기기를 등록해주세요.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(login.this, ArduinoRegister.class);
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("ID", userId);
+                    bundle.putBoolean("isNew", true);
+                    intent.putExtras(bundle);
+
+                    startActivity(intent);
+                }
             }
             else {
                 String msg = object.getString("msg");
@@ -92,6 +124,8 @@ public class login extends AppCompatActivity {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
+    String arduinoID;
+    ImageView imageView;
     EditText editId;
     EditText editPw;
     InputMethodManager inputMethodManager;

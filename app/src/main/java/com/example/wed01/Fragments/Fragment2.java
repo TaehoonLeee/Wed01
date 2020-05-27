@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +28,24 @@ import java.math.BigDecimal;
 public class Fragment2 extends Fragment {
     ViewGroup viewGroup;
 
+    public static Fragment2 newInstance(String arduinoID) {
+        Fragment2 fragment2 = new Fragment2();
+        Bundle bundle = new Bundle();
+        bundle.putString("ARDUINOID", arduinoID);
+        fragment2.setArguments(bundle);
+
+        return fragment2;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(getArguments() != null) {
+            arduinoID = getArguments().getString("ARDUINOID");
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,7 +63,7 @@ public class Fragment2 extends Fragment {
 
     private void receiveRtData() {
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("phone/data", new ContentValues(), "POST");
+            AsyncHttp asyncHttp = new AsyncHttp("phone/data/1", new ContentValues(), "GET");
             String result = asyncHttp.execute().get();
             JSONArray jsonArray = new JSONArray(result);
 
@@ -83,8 +101,8 @@ public class Fragment2 extends Fragment {
                 handler.sendEmptyMessage(0);
 
                 try {
-                    Thread.sleep(30000);
-                } catch (InterruptedException e) { e.printStackTrace(); }
+                    Thread.sleep(50000);
+                } catch (Exception e) { e.printStackTrace(); }
             }
         }
     }
@@ -98,6 +116,7 @@ public class Fragment2 extends Fragment {
         }
     };
 
+    String arduinoID;
     private float humidity;
     private String time;
     private ValueLineChart chart;

@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
+import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -68,13 +68,17 @@ public class register extends AppCompatActivity {
     private void createUser() {
         String ID = editEmail.getText().toString();
         String PW = editPassword.getText().toString();
+        String ConfirmPW = editPasswordConfirm.getText().toString();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("ID", ID);
         contentValues.put("PW", PW);
+        contentValues.put("CONFIRMPW", ConfirmPW);
+
+        Log.d("Register", ConfirmPW);
 
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("register", contentValues, "POST");
+            AsyncHttp asyncHttp = new AsyncHttp("user/register", contentValues, "POST");
             String result = asyncHttp.execute().get();
             JSONObject object = new JSONObject(result);
 

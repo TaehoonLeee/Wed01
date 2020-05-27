@@ -12,10 +12,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.wed01.AsyncHttp;
-import com.example.wed01.MainActivity;
 import com.example.wed01.MainActivityB;
 import com.example.wed01.R;
-import com.example.wed01.memberManagement.login;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

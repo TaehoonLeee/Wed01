@@ -24,7 +24,7 @@
             android:layout_height="121dp"
             android:layout_marginTop="40dp"
             android:gravity="center_horizontal"
-            android:src="@drawable/logo_1_002" />
+            android:src="@drawable/home_cutout_1" />
     </LinearLayout>
 
     <LinearLayout
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/linearlayout_login1"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:onClick="linearOnClick">

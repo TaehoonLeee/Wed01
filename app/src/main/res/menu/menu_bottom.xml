@@ -5,10 +5,10 @@
     <item
         android:id="@+id/tab1"
         app:showAsAction="always"
-        android:icon="@drawable/home"
+        android:icon="@drawable/edit_home"
         android:enabled="true"
         android:checked="true"
-        android:title="메뉴"/>
+        android:title="홈" />
 
     <item
         android:id="@+id/tab2"
