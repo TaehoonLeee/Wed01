@@ -3,6 +3,8 @@ package com.example.wed01;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.example.wed01.Fragments.Fragment4;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,16 +25,23 @@ public class MainActivityB extends AppCompatActivity {
         fragment1 = new Fragment1();
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
+        fragment4 = new Fragment4();
 
         Intent prev = getIntent();
 
         Bundle bundle = prev.getExtras();
 
         arduinoId = bundle.getString("ARDUINOID");
+        userID = bundle.getString("USERID");
 
         Log.d("MainActivityB", arduinoId);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment1).commitAllowingStateLoss();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment1).commitAllowingStateLoss();
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = Fragment1.newInstance(arduinoId);
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -58,7 +67,12 @@ public class MainActivityB extends AppCompatActivity {
                     }
 
                     case R.id.tab3: {
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment3).commitAllowingStateLoss();
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        Log.d("MainActivityB_Bottom", arduinoId);
+                        Fragment fragment = Fragment4.newInstance(arduinoId);
+                        fragmentTransaction.replace(R.id.frameLayout, fragment);
+                        fragmentTransaction.commit();
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment4).commitAllowingStateLoss();
 
                         return true;
                     }
@@ -69,9 +83,19 @@ public class MainActivityB extends AppCompatActivity {
         });
     }
 
-    String arduinoId;
+    public static void setArduinoId(String _ardID) {
+        arduinoId = _ardID;
+    }
+
+    public static void setUserID(String _userID) {
+        userID = _userID;
+    }
+
+    static String arduinoId;
+    static String userID;
     BottomNavigationView bottomNavigationView;
     Fragment1 fragment1;
     Fragment2 fragment2;
     Fragment3 fragment3;
+    Fragment4 fragment4;
 }

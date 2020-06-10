@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.wed01.AsyncHttp;
 import com.example.wed01.R;
@@ -50,6 +51,8 @@ public class Fragment2 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment2, container, false);
+
+        graphText = (TextView) viewGroup.findViewById(R.id.graphText);
         chart = (ValueLineChart) viewGroup.findViewById(R.id.chart);
 
         chart.clearChart();
@@ -71,7 +74,7 @@ public class Fragment2 extends Fragment {
             series.setColor(0xff56b7f1);
 
             if (jsonArray.length() >= 10) {
-                for (int i = jsonArray.length() - 10; i < jsonArray.length(); i++) {
+                for (int i = jsonArray.length() - 10; i < jsonArray.length()-1; i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     time = object.getString("time");
                     humidity = BigDecimal.valueOf(object.getDouble("humidity")).floatValue();
@@ -84,7 +87,7 @@ public class Fragment2 extends Fragment {
                     JSONObject object = jsonArray.getJSONObject(i);
                     time = object.getString("time");
                     humidity = BigDecimal.valueOf(object.getDouble("humidity")).floatValue();
-                    Log.d("Fragment2", String.valueOf(humidity));
+//                    Log.d("Fragment2", String.valueOf(humidity));
                     series.addPoint(new ValueLinePoint(time, humidity));
                 }
             }
@@ -120,4 +123,5 @@ public class Fragment2 extends Fragment {
     private float humidity;
     private String time;
     private ValueLineChart chart;
+    private TextView graphText;
 }

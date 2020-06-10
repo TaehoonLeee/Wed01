@@ -31,9 +31,11 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.wed01.Arduino.ArduinoDelete;
 import com.example.wed01.Arduino.ArduinoRegister;
 import com.example.wed01.AsyncHttp;
 import com.example.wed01.Fragments.bottomFragments.BottomSheetTempSetDialog;
+import com.example.wed01.MainActivityB;
 import com.example.wed01.R;
 
 import org.json.JSONArray;
@@ -43,6 +45,16 @@ import static android.app.Activity.RESULT_OK;
 public class Fragment1 extends Fragment{
     ViewGroup viewGroup;
 
+
+    public static Fragment1 newInstance(String arduinoID, String userID) {
+        Fragment1 fragment1 = new Fragment1();
+        Bundle bundle = new Bundle();
+        bundle.putString("ARDUINOID", arduinoID);
+        bundle.putString("USERID", userID);
+        fragment1.setArguments(bundle);
+
+        return fragment1;
+    }
 
     public static Fragment1 newInstance(String arduinoID) {
         Fragment1 fragment1 = new Fragment1();
@@ -59,6 +71,9 @@ public class Fragment1 extends Fragment{
 
         if(getArguments() != null) {
             arduinoID = getArguments().getString("ARDUINOID");
+            userID = getArguments().getString("USERID");
+            MainActivityB.setArduinoId(arduinoID);
+            MainActivityB.setUserID(userID);
         }
     }
 
@@ -139,9 +154,9 @@ public class Fragment1 extends Fragment{
 //            }
 //        });
 
-//        TempThread thread = new TempThread();
-//        thread.setDaemon(true);
-//        thread.start();
+        TempThread thread = new TempThread();
+        thread.setDaemon(true);
+        thread.start();
 
         return viewGroup;
     }
@@ -176,6 +191,7 @@ public class Fragment1 extends Fragment{
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 arduinoID = data.getStringExtra("arduinoID");
+                MainActivityB.setArduinoId(arduinoID);
             }
         }
     }
@@ -189,6 +205,14 @@ public class Fragment1 extends Fragment{
         intent.putExtras(bundle);
 
         startActivityForResult(intent, 1);
+    }
+
+    private void deleteArduino() {
+        Intent intent = new Intent(getActivity(), ArduinoDelete.class);
+        Bundle bundle = new Bundle();
+
+        bundle.putString("ARDUINOID", arduinoID);
+        bundle.putString("USERID", userID);
     }
 
 //    private void sendArduinoData() {
@@ -244,7 +268,7 @@ public class Fragment1 extends Fragment{
                 public void onAnimationEnd(Animator animation) {
                     currentTemp.setVisibility(View.VISIBLE);
                     circular_reveal_content.setVisibility(View.INVISIBLE);
-                    BottomSheetTempSetDialog bottomSheetMenuDialog = BottomSheetTempSetDialog.getInstance(arduinoID, String.valueOf(seekBar.getProgress()));
+                    BottomSheetTempSetDialog bottomSheetMenuDialog = BottomSheetTempSetDialog.getInstance(arduinoID, String.valueOf(seekBar.getProgress()+16));
                     bottomSheetMenuDialog.show(getActivity().getSupportFragmentManager(), "tag");
                 }
 
@@ -350,7 +374,7 @@ public class Fragment1 extends Fragment{
     Drawable fireDrawable, snowDrawable;
     ImageView fireImage, snowImage;
     TextView currentTemp, hopeTemp;
-    String arduinoID;
+    String arduinoID, userID;
     Context thisContext;
     SeekBar seekBar;
     View thumbView;
