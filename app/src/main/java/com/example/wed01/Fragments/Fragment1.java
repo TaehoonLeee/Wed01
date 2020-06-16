@@ -17,6 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -36,6 +38,7 @@ import com.example.wed01.Arduino.ArduinoRegister;
 import com.example.wed01.AsyncHttp;
 import com.example.wed01.Fragments.bottomFragments.BottomSheetTempSetDialog;
 import com.example.wed01.MainActivityB;
+import com.example.wed01.NotificationWork;
 import com.example.wed01.R;
 
 import org.json.JSONArray;
@@ -44,7 +47,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class Fragment1 extends Fragment{
     ViewGroup viewGroup;
-
 
     public static Fragment1 newInstance(String arduinoID, String userID) {
         Fragment1 fragment1 = new Fragment1();
@@ -98,7 +100,7 @@ public class Fragment1 extends Fragment{
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
 
-        currentTemp = (TextView) viewGroup.findViewById(R.id.currentTemp);
+        currentTempText = (TextView) viewGroup.findViewById(R.id.currentTemp);
         hopeTemp = (TextView) viewGroup.findViewById(R.id.hopeTemp);
         thumbDrawable = getResources().getDrawable(R.drawable.point_green);
         circular_reveal_content = (FrameLayout) viewGroup.findViewById(R.id.circular_reveal_content);
@@ -161,6 +163,53 @@ public class Fragment1 extends Fragment{
         return viewGroup;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_top_plus : registerArduino(); break;
+            case R.id.menu_top_delete : deleteArduino(); break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                arduinoID = data.getStringExtra("arduinoID");
+                MainActivityB.setArduinoId(arduinoID);
+            }
+        }
+        else if (resultCode == 2) {
+            if (resultCode == RESULT_OK) {
+
+            }
+        }
+    }
+
+    private void registerArduino() {
+        Intent intent = new Intent(getActivity(), ArduinoRegister.class);
+        Bundle bundle = new Bundle();
+
+        bundle.putBoolean("isNew", false);
+        bundle.putString("USERID", userID);
+        intent.putExtras(bundle);
+
+        startActivityForResult(intent, 1);
+    }
+
+    private void deleteArduino() {
+        Intent intent = new Intent(getActivity(), ArduinoDelete.class);
+        Bundle bundle = new Bundle();
+
+        bundle.putString("ARDUINOID", arduinoID);
+        bundle.putString("USERID", userID);
+        intent.putExtras(bundle);
+
+        startActivityForResult(intent, 2);
+    }
+
     private void initMainImage() {
         fireImage = (ImageView) viewGroup.findViewById(R.id.fireImage);
         snowImage = (ImageView) viewGroup.findViewById(R.id.snowImage);
@@ -175,60 +224,6 @@ public class Fragment1 extends Fragment{
         fireImage.setImageBitmap(fireMap);
         snowImage.setImageBitmap(snowMap);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_top_plus : registerArduino(); break;
-            case R.id.menu_top_delete : break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                arduinoID = data.getStringExtra("arduinoID");
-                MainActivityB.setArduinoId(arduinoID);
-            }
-        }
-    }
-
-    private void registerArduino() {
-        boolean isNew = false;
-        Intent intent = new Intent(getActivity(), ArduinoRegister.class);
-        Bundle bundle = new Bundle();
-
-        bundle.putBoolean("isNew", isNew);
-        intent.putExtras(bundle);
-
-        startActivityForResult(intent, 1);
-    }
-
-    private void deleteArduino() {
-        Intent intent = new Intent(getActivity(), ArduinoDelete.class);
-        Bundle bundle = new Bundle();
-
-        bundle.putString("ARDUINOID", arduinoID);
-        bundle.putString("USERID", userID);
-    }
-
-//    private void sendArduinoData() {
-//        int humidity = croller.getProgress();
-//
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put("ardID", 1);
-//        contentValues.put("humidity", humidity);
-//
-//        Log.d("MainActivity", String.valueOf(humidity));
-//
-//        try {
-//            AsyncHttp asyncHttp = new AsyncHttp("phone/data", contentValues, "POST");
-//            asyncHttp.execute();
-//        } catch (Exception e) { e.printStackTrace(); }
-//    }
 
     private Drawable getThumb(int progress) {
         ((TextView) thumbView.findViewById(R.id.tvProgress)).setText(progress + "");
@@ -249,7 +244,7 @@ public class Fragment1 extends Fragment{
         int radius = (int) Math.hypot(circular_reveal_content.getWidth(), circular_reveal_content.getHeight());
 
         if (isOpen) {
-            currentTemp.setVisibility(View.INVISIBLE);
+            currentTempText.setVisibility(View.INVISIBLE);
             Animator revealAnimator = ViewAnimationUtils.createCircularReveal(circular_reveal_content, centerX, centerY, 0, radius);
             revealAnimator.setDuration(300);
             circular_reveal_content.setVisibility(View.VISIBLE);
@@ -266,7 +261,7 @@ public class Fragment1 extends Fragment{
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    currentTemp.setVisibility(View.VISIBLE);
+                    currentTempText.setVisibility(View.VISIBLE);
                     circular_reveal_content.setVisibility(View.INVISIBLE);
                     BottomSheetTempSetDialog bottomSheetMenuDialog = BottomSheetTempSetDialog.getInstance(arduinoID, String.valueOf(seekBar.getProgress()+16));
                     bottomSheetMenuDialog.show(getActivity().getSupportFragmentManager(), "tag");
@@ -288,35 +283,6 @@ public class Fragment1 extends Fragment{
             revealAnimator.start();
         }
     }
-
-    class TempThread extends Thread {
-        @Override
-        public void run() {
-            while(true) {
-                handler.sendEmptyMessage(0);
-
-                try {
-                    Thread.sleep(50000);
-                } catch (InterruptedException e) { e.printStackTrace(); }
-            }
-        }
-    }
-
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            if(msg.what == 0){   // Message id 가 0 이면
-                try {
-                    AsyncHttp asyncHttp = new AsyncHttp("phone/data/1", new ContentValues(), "GET");
-                    String result = asyncHttp.execute().get();
-                    JSONArray jsonArray = new JSONArray(result);
-
-
-                    currentTemp.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("humidity"));
-                } catch (Exception e) { e.printStackTrace(); }
-            }
-        }
-    };
 
 //    private void initCroller() {
 //        croller.setIndicatorWidth(10);
@@ -369,13 +335,52 @@ public class Fragment1 extends Fragment{
         imageView.setImageBitmap(tmpMap);
     }
 
-//    Croller croller;
+
+    class TempThread extends Thread {
+        @Override
+        public void run() {
+            while(true) {
+                handler.sendEmptyMessage(0);
+
+                try {
+                    Thread.sleep(30000);
+                } catch (InterruptedException e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == 0){   // Message id 가 0 이면
+                try {
+                    AsyncHttp asyncHttp = new AsyncHttp("phone/data/1", new ContentValues(), "GET");
+                    String result = asyncHttp.execute().get();
+                    JSONArray jsonArray = new JSONArray(result);
+                    String currentTemp = jsonArray.getJSONObject(jsonArray.length() - 1).getString("humidity");
+
+                    if(Integer.parseInt(currentTemp) < 30) {
+                        WorkRequest workRequest = new OneTimeWorkRequest.Builder(NotificationWork.class).build();
+                        WorkManager.getInstance().enqueue(workRequest);
+                    }
+
+                    currentTempText.setText(currentTemp);
+                } catch (Exception e) { e.printStackTrace(); }
+            }
+        }
+    };
+
+    public static Context getThisContext() {
+        return thisContext;
+    }
+
+    //    Croller croller;
     Bitmap fireMap, snowMap;
     Drawable fireDrawable, snowDrawable;
     ImageView fireImage, snowImage;
-    TextView currentTemp, hopeTemp;
+    TextView currentTempText, hopeTemp;
     String arduinoID, userID;
-    Context thisContext;
+    static Context thisContext;
     SeekBar seekBar;
     View thumbView;
     Drawable thumbDrawable;
