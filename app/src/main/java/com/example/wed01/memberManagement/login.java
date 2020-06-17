@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -61,6 +63,12 @@ public class login extends AppCompatActivity {
             public void onClick(View v) {
                 Login();
 //                Intent intent = new Intent(login.this, MainActivityB.class);
+//                Bundle bundle = new Bundle();
+//
+//                bundle.putString("ARDUINOID", "1");
+//                bundle.putString("USERID", "test");
+//                intent.putExtras(bundle);
+//
 //                startActivity(intent);
 //                finish();
             }
@@ -93,12 +101,16 @@ public class login extends AppCompatActivity {
 
                 JSONArray jsonArray = object.getJSONArray("arduino");
 
-                if( jsonArray.length() != 0) {
+                if(jsonArray.length() != 0) {
+                    arduinoID = jsonArray.getJSONObject(0).getString("ID");
+
+                    Log.d("Login", arduinoID);
+
                     Intent intent = new Intent(login.this, MainActivityB.class);
 
                     Bundle bundle = new Bundle();
-
                     bundle.putString("ARDUINOID", arduinoID);
+                    bundle.putString("USERID", userId);
                     intent.putExtras(bundle);
 
                     startActivity(intent);
@@ -110,7 +122,7 @@ public class login extends AppCompatActivity {
 
                     Bundle bundle = new Bundle();
 
-                    bundle.putString("ID", userId);
+                    bundle.putString("USERID", userId);
                     bundle.putBoolean("isNew", true);
                     intent.putExtras(bundle);
 

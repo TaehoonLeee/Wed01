@@ -34,12 +34,12 @@ public class MainActivityB extends AppCompatActivity {
         arduinoId = bundle.getString("ARDUINOID");
         userID = bundle.getString("USERID");
 
-        Log.d("MainActivityB", arduinoId);
+        Log.d("MainActivityB", userID + ", " + arduinoId);
 
 //        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment1).commitAllowingStateLoss();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        Fragment fragment = Fragment1.newInstance(arduinoId);
+        Fragment fragment = Fragment1.newInstance(arduinoId, userID);
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
 
@@ -49,7 +49,7 @@ public class MainActivityB extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.tab1: {
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        Fragment fragment = Fragment1.newInstance(arduinoId);
+                        Fragment fragment = Fragment1.newInstance(arduinoId, userID);
                         fragmentTransaction.replace(R.id.frameLayout, fragment);
                         fragmentTransaction.commit();
 
@@ -90,6 +90,8 @@ public class MainActivityB extends AppCompatActivity {
     public static void setUserID(String _userID) {
         userID = _userID;
     }
+
+    public static String getUserID() { return userID; }
 
     static String arduinoId;
     static String userID;

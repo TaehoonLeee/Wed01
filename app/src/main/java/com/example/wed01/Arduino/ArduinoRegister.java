@@ -2,8 +2,10 @@ package com.example.wed01.Arduino;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -36,6 +38,8 @@ public class ArduinoRegister extends Activity {
         Bundle bundle = prev.getExtras();
 
         isNew = bundle.getBoolean("isNew");
+        userID = bundle.getString("USERID");
+        Log.d("ardReg", userID);
 
         ArduinoRegisterBtn = (Button) findViewById(R.id.registerArduino);
 
@@ -47,12 +51,15 @@ public class ArduinoRegister extends Activity {
             @Override
             public void onClick(View v) {
                 String arduinoID = spinner.getSelectedItem().toString();
+                mappingArduino(arduinoID);
+
                 if( isNew ) {
                     Intent intent = new Intent(ArduinoRegister.this, MainActivityB.class);
 
                     Bundle bundle = new Bundle();
 
                     bundle.putString("ARDUINOID", arduinoID);
+                    bundle.putString("USERID", userID);
                     intent.putExtras(bundle);
 
                     startActivity(intent);
@@ -67,7 +74,7 @@ public class ArduinoRegister extends Activity {
         });
     }
 
-    public void getArduinoIDList() {
+    private void getArduinoIDList() {
         try {
             AsyncHttp asyncHttp = new AsyncHttp("arduino/unregistered", new ContentValues(), "GET");
             String result = asyncHttp.execute().get();
@@ -92,8 +99,31 @@ public class ArduinoRegister extends Activity {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
+    private void mappingArduino(String arduinoID) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("ID", userID);
+        contentValues.put("ARDUINOID", arduinoID);
+
+        try {
+            AsyncHttp asyncHttp = new AsyncHttp("phone/connect", contentValues, "POST");
+            String result = asyncHttp.execute().get();
+            JSONObject jsonObject = new JSONObject(result);
+
+            if(jsonObject.getInt("resultCode") == 200) {
+                String msg = jsonObject.getString("msg");
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+            else {
+                String msg = jsonObject.getString("msg");
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+
+    }
+
     Spinner spinner;
     boolean isNew = false;
     List<String> spinnerArray;
     Button ArduinoRegisterBtn;
+    String userID;
 }
