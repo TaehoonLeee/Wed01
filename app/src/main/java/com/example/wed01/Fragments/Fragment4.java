@@ -32,6 +32,16 @@ public class Fragment4 extends Fragment {
         return fragment4;
     }
 
+    public static Fragment4 newInstance(String arduinoID, String userID) {
+        Fragment4 fragment4 = new Fragment4();
+        Bundle bundle = new Bundle();
+        bundle.putString("ARDUINOID", arduinoID);
+        bundle.putString("USERID", userID);
+        fragment4.setArguments(bundle);
+
+        return fragment4;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +64,7 @@ public class Fragment4 extends Fragment {
         IDlinearlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetArduinoDialog bottomSheetArduinoDialog = BottomSheetArduinoDialog.getInstance();
+                BottomSheetArduinoDialog bottomSheetArduinoDialog = BottomSheetArduinoDialog.getInstance(arduinoID, Fragment1.currentTempText.getText().toString().trim(), "0");
                 bottomSheetArduinoDialog.show(getActivity().getSupportFragmentManager(), "tag");
             }
         });
