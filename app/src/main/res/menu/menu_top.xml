@@ -3,11 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/top_menu"
+        android:id="@+id/menu_top_plus"
         app:showAsAction="always"
-        android:icon="@drawable/menu_point_v"
+        android:icon="@drawable/plus"
         android:enabled="true"
         android:checked="true"
-        android:title=""/>
+        android:title="plus"/>
+
+    <item
+        android:id="@+id/menu_top_delete"
+        app:showAsAction="always"
+        android:icon="@drawable/delete"
+        android:enabled="true"
+        android:checked="true"
+        android:title="delete"/>
 
 </menu>

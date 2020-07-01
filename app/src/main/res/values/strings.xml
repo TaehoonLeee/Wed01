@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Wed01</string>
+    <string name="app_name">BeHot</string>
+    <string name="temperature">℃</string>
 </resources>

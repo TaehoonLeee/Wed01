@@ -1,4 +1,4 @@
-package com.example.wed01.Fragments.bottomFragments;
+package com.example.wed01.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.wed01.Fragments.Fragment1;
+import com.example.wed01.Fragments.bottomFragments.BottomSheetArduinoDialog;
 import com.example.wed01.MainActivityB;
 import com.example.wed01.R;
 

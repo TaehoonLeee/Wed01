@@ -1,8 +1,6 @@
 package com.example.wed01.Fragments.bottomFragments;
 
-import android.app.Dialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.wed01.AsyncHttp;
 import com.example.wed01.MainActivityB;
 import com.example.wed01.R;
+import com.example.wed01.RecyclerView.ArduinoItem;
+import com.example.wed01.RecyclerView.ArduinoRecyclerAdapter;
+import com.example.wed01.RecyclerView.DividerItemDecoration;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.json.JSONArray;
@@ -53,7 +54,9 @@ public class BottomSheetArduinoDialog extends BottomSheetDialogFragment implemen
         tempTextView.setText("현재 온도 : " + getArguments().getString("TEMPERATURE"));
         humidityTextView.setText("현재 습도 : " + getArguments().getString("HUMIDITY"));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.recycler_divider));
         mainArduinoSwitch.setChecked(true);
+
         getArduinoIDs();
 
 //        plusText.setOnClickListener(this);
@@ -81,11 +84,9 @@ public class BottomSheetArduinoDialog extends BottomSheetDialogFragment implemen
     }
 
     public void getArduinoIDs() {
-        Log.d("BottomArduinoDialog", "test");
         items = new ArrayList<>();
 
         try {
-            Log.d("BottomArduinoDialog", "test2");
             ContentValues contentValues = new ContentValues();
             contentValues.put("ID", MainActivityB.getUserID());
             Log.d("BottomSheetArduino", MainActivityB.getUserID());
@@ -94,14 +95,15 @@ public class BottomSheetArduinoDialog extends BottomSheetDialogFragment implemen
             String result = asyncHttp.execute().get();
             JSONObject jsonObject = new JSONObject(result);
             JSONArray jsonArray = jsonObject.getJSONArray("ardList");
-            Log.d("BottomArduinoDialog", "test3");
 
             if(jsonArray.length() != 0) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     String arduinoID = object.getString("ID");
-                    ArduinoItem arduinoItem = new ArduinoItem(arduinoID);
-                    items.add(arduinoItem);
+                    if( !arduinoID.equals(mainArduinoID.getText().toString()) ) {
+                        ArduinoItem arduinoItem = new ArduinoItem(arduinoID);
+                        items.add(arduinoItem);
+                    }
                 }
             }
         } catch (Exception e) { e.printStackTrace(); }

@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffffff">
+    android:background="#ffffffff"
+    android:id="@+id/fragment1_layout">
 
     <FrameLayout
         android:layout_marginTop="5dp"
@@ -77,21 +78,30 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/waterImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/water" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
 
-                    <TextView
-                        android:id="@+id/waterTemp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="16"
-                        android:textColor="@color/black"
-                        android:layout_marginLeft="5dp"
-                        android:textSize="15sp" />
+                        <TextView
+                            android:id="@+id/waterTemp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="16"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:drawableStart="@drawable/water"
+                            android:drawablePadding="3dp" />
+
+                        <TextView
+                            android:id="@+id/heatingText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="heating to..."
+                            android:textColor="#000000"
+                            android:textSize="15sp" />
+                    </FrameLayout>
                 </LinearLayout>
 
                 <FrameLayout
@@ -113,11 +123,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:src="@drawable/point_green"/>
+<!--                        <ImageView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:src="@drawable/point_gray"/>-->
 
                         <TextView
                             android:id="@+id/hopeTemp"
@@ -130,27 +140,6 @@
                     </FrameLayout>
                 </FrameLayout>
             </LinearLayout>
-
-
-<!--            <com.sdsmdg.harjot.crollerTest.Croller-->
-<!--                android:id="@+id/croller"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="87dp"-->
-<!--                app:back_circle_color="#EDEDED"-->
-<!--                app:indicator_color="#ffffffff"-->
-<!--                app:indicator_width="10"-->
-<!--                app:label_color="#ffffff"-->
-<!--                app:main_circle_color="#FFFFFF"-->
-<!--                app:max="100"-->
-<!--                app:progress_secondary_color="#EEEEEE"-->
-<!--                app:start_offset="45" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/powerImage"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="10dp"-->
-<!--                android:layout_marginBottom="7dp" />-->
         </LinearLayout>
     </FrameLayout>
 
@@ -162,6 +151,6 @@
         android:layout_gravity="center"
         android:progress="5"
         android:max="11"
-        android:thumb="@drawable/seekbar_thumb"/>
+        android:thumb="@drawable/seekbar_thumb" />
 
 </LinearLayout>

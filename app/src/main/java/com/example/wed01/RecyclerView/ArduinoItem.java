@@ -1,4 +1,4 @@
-package com.example.wed01.Fragments.bottomFragments;
+package com.example.wed01.RecyclerView;
 
 public class ArduinoItem {
 

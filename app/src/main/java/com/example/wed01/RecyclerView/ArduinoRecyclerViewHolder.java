@@ -1,4 +1,4 @@
-package com.example.wed01.Fragments.bottomFragments;
+package com.example.wed01.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;

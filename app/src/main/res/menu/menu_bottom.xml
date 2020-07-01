@@ -8,20 +8,20 @@
         android:icon="@drawable/edit_home"
         android:enabled="true"
         android:checked="true"
-        android:title="홈" />
+        android:title="" />
 
     <item
         android:id="@+id/tab2"
         app:showAsAction="always"
         android:icon="@drawable/main_chart"
         android:enabled="true"
-        android:title="그래프"/>
+        android:title=""/>
 
     <item
         android:id="@+id/tab3"
         app:showAsAction="always"
-        android:icon="@drawable/main_more_icon"
+        android:icon="@drawable/user_2"
         android:enabled="true"
-        android:title="더보기"/>
+        android:title=""/>
 
 </menu>

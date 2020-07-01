@@ -46,7 +46,7 @@ public class AsyncHttp extends AsyncTask<Void, Void, String> {
         return result;
     }
 
-    private String url = "http://a736d1200466.ngrok.io/v2/";
+    private String url = "http://a9faf685ff18.ngrok.io/v2/";
     private ContentValues contentValues;
     private String method;
 }

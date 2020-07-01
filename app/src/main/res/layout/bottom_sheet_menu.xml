@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/layout_cornering"
+    android:paddingStart="5dp">
+
+    <TextView
+        android:id="@+id/bottom_sheet_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="기기 추가"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:layout_margin="8dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/thermometer_plus"/>
+
+    <View
+        android:layout_marginStart="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#4e4e4e"/>
+
+    <TextView
+        android:id="@+id/bottom_sheet_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="계정 정보"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:layout_margin="8dp"
+        android:drawablePadding="11dp"
+        android:drawableStart="@drawable/info"/>
+
+    <View
+        android:layout_marginStart="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#4e4e4e"/>
+
+    <TextView
+        android:id="@+id/bottom_sheet_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로그아웃"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:layout_margin="8dp"
+        android:drawablePadding="11dp"
+        android:drawableStart="@drawable/logout"/>
+
+    <View
+        android:layout_marginStart="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#4e4e4e"/>
+
+</LinearLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/layout_cornering">
+
+    <TextView
+        android:id="@+id/setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이 온도로 귀하의 기기에 맞춤"
+        android:layout_gravity="center"
+        android:textSize="17sp"
+        android:layout_margin="8dp"
+        android:drawablePadding="10dp" />
+
+    <View
+        android:layout_marginStart="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#4e4e4e"/>
+
+    <TextView
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="취소"
+        android:layout_gravity="center"
+        android:textSize="17sp"
+        android:layout_margin="8dp"
+        android:drawablePadding="11dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#4e4e4e"/>
+
+</LinearLayout>

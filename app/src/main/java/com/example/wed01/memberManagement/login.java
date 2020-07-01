@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.wed01.Arduino.ArduinoRegister;
+import com.example.wed01.Arduino.ArduinoSelect;
 import com.example.wed01.AsyncHttp;
 import com.example.wed01.MainActivityB;
 import com.example.wed01.R;
@@ -102,6 +103,17 @@ public class login extends AppCompatActivity {
                 JSONArray jsonArray = object.getJSONArray("arduino");
 
                 if(jsonArray.length() != 0) {
+                    if(jsonArray.length() > 1) {
+                        Toast.makeText(login.this, "사용할 기기를 선택해주세요.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(login.this, ArduinoSelect.class);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("USERID", userId);
+                        intent.putExtras(bundle);
+
+                        startActivity(intent);
+                    }
+                    else {
                     arduinoID = jsonArray.getJSONObject(0).getString("ID");
 
                     Log.d("Login", arduinoID);
@@ -111,10 +123,12 @@ public class login extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("ARDUINOID", arduinoID);
                     bundle.putString("USERID", userId);
+                    bundle.putInt("MSGID", 0);
                     intent.putExtras(bundle);
 
                     startActivity(intent);
                     finish();
+                    }
                 }
                 else {
                     Toast.makeText(login.this, "등록된 기기가 없습니다. 기기를 등록해주세요.", Toast.LENGTH_SHORT).show();

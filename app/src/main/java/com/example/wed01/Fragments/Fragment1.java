@@ -18,9 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,10 +45,13 @@ import com.example.wed01.R;
 
 import org.json.JSONArray;
 
+import java.util.concurrent.TimeUnit;
+
+import static android.app.Activity.RESULT_FIRST_USER;
 import static android.app.Activity.RESULT_OK;
 
 public class Fragment1 extends Fragment{
-    ViewGroup viewGroup;
+    private ViewGroup viewGroup;
 
     public static Fragment1 newInstance(String arduinoID, String userID) {
         Fragment1 fragment1 = new Fragment1();
@@ -102,15 +107,12 @@ public class Fragment1 extends Fragment{
 
         currentTempText = (TextView) viewGroup.findViewById(R.id.currentTemp);
         hopeTemp = (TextView) viewGroup.findViewById(R.id.hopeTemp);
+        heatingText = (TextView) viewGroup.findViewById(R.id.heatingText);
+        heatingText.setVisibility(View.INVISIBLE);
+        waterTemp = (TextView) viewGroup.findViewById(R.id.waterTemp);
         thumbDrawable = getResources().getDrawable(R.drawable.point_green);
         circular_reveal_content = (FrameLayout) viewGroup.findViewById(R.id.circular_reveal_content);
         circular_reveal_content.setVisibility(View.INVISIBLE);
-
-//        powerImage = (ImageView) viewGroup.findViewById(R.id.powerImage);
-//
-//        powerDrawable = getResources().getDrawable(R.drawable.power);
-//        map = ((BitmapDrawable)powerDrawable).getBitmap();
-//        powerImage.setImageBitmap(map);
 
         initMainImage();
 
@@ -138,29 +140,17 @@ public class Fragment1 extends Fragment{
             }
         });
 
-//        croller = (Croller) viewGroup.findViewById(R.id.croller);
-//        initCroller();
-//
-//        croller.setOnProgressChangedListener(new Croller.onProgressChangedListener() {
-//            @Override
-//            public void onProgressChanged(int progress) {
-//                hopeTemp.setText("온도 조절 : " + progress);
-//                changeBitmap(progress);
-//            }
-//        });
-
-//        DataSendButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                sendArduinoData();
-//            }
-//        });
-
-        TempThread thread = new TempThread();
-        thread.setDaemon(true);
+        thread = new TempThread();
+//        thread.setDaemon(true);
         thread.start();
 
         return viewGroup;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        thread.interrupt();
     }
 
     @Override
@@ -181,9 +171,9 @@ public class Fragment1 extends Fragment{
                 MainActivityB.setArduinoId(arduinoID);
             }
         }
-        else if (resultCode == 2) {
-            if (resultCode == RESULT_OK) {
-
+        else if (requestCode == 2) { // 사용하고 있는 기기를 삭제하고 다시 아두이노 기기를 선택하면 메인 액티비티 화면이 중복되는 것을 해
+            if (resultCode == RESULT_FIRST_USER) {
+                ((MainActivityB)getActivity()).finish();
             }
         }
     }
@@ -245,9 +235,11 @@ public class Fragment1 extends Fragment{
 
         if (isOpen) {
             currentTempText.setVisibility(View.INVISIBLE);
+            waterTemp.setVisibility(View.INVISIBLE);
             Animator revealAnimator = ViewAnimationUtils.createCircularReveal(circular_reveal_content, centerX, centerY, 0, radius);
             revealAnimator.setDuration(300);
             circular_reveal_content.setVisibility(View.VISIBLE);
+            heatingText.setVisibility(View.VISIBLE);
             revealAnimator.start();
         }
         else {
@@ -261,8 +253,6 @@ public class Fragment1 extends Fragment{
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    currentTempText.setVisibility(View.VISIBLE);
-                    circular_reveal_content.setVisibility(View.INVISIBLE);
                     BottomSheetTempSetDialog bottomSheetMenuDialog = BottomSheetTempSetDialog.getInstance(arduinoID, String.valueOf(seekBar.getProgress()+16));
                     bottomSheetMenuDialog.show(getActivity().getSupportFragmentManager(), "tag");
                 }
@@ -284,20 +274,6 @@ public class Fragment1 extends Fragment{
         }
     }
 
-//    private void initCroller() {
-//        croller.setIndicatorWidth(10);
-//        croller.setBackCircleColor(Color.TRANSPARENT);
-//        croller.setMainCircleColor(Color.TRANSPARENT);
-//        croller.setMax(100);
-//        croller.setStartOffset(45);
-//        croller.setIsContinuous(true);
-//        croller.setLabelColor(Color.TRANSPARENT);
-//        croller.setProgressPrimaryColor(Color.RED);
-//        croller.setIndicatorColor(Color.TRANSPARENT);
-//        croller.setProgressSecondaryColor(Color.parseColor("#EEEEEE"));
-//        croller.setProgressPrimaryStrokeWidth(10);
-//    }
-//
     private void changeBitmap(int progress) {
         ImageView imageView;
         Bitmap bitmap;
@@ -337,14 +313,24 @@ public class Fragment1 extends Fragment{
 
 
     class TempThread extends Thread {
+        boolean state = true;
         @Override
         public void run() {
-            while(true) {
+            while(state) {
                 handler.sendEmptyMessage(0);
 
                 try {
                     Thread.sleep(30000);
-                } catch (InterruptedException e) { e.printStackTrace(); }
+//                    if(Thread.interrupted()) {
+//                        state = false;
+//                        break;
+//                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+//                    state = false;
+                } finally {
+                    Log.d("TempThread", "Thread is dead");
+                }
             }
         }
     }
@@ -354,35 +340,59 @@ public class Fragment1 extends Fragment{
         public void handleMessage(Message msg) {
             if(msg.what == 0){   // Message id 가 0 이면
                 try {
-                    AsyncHttp asyncHttp = new AsyncHttp("phone/data/1", new ContentValues(), "GET");
+                    AsyncHttp asyncHttp = new AsyncHttp("phone/data/" + arduinoID, new ContentValues(), "GET");
                     String result = asyncHttp.execute().get();
                     JSONArray jsonArray = new JSONArray(result);
-                    String currentTemp = jsonArray.getJSONObject(jsonArray.length() - 1).getString("humidity");
+                    String currentTemp = jsonArray.getJSONObject(jsonArray.length()-1).getString("humidity");
+                    String humidity = jsonArray.getJSONObject(jsonArray.length()-1).getString("humi");
 
-                    if(Integer.parseInt(currentTemp) < 30) {
-                        WorkRequest workRequest = new OneTimeWorkRequest.Builder(NotificationWork.class).build();
-                        WorkManager.getInstance().enqueue(workRequest);
-                    }
+                    WorkRequest workRequest = new OneTimeWorkRequest.Builder(NotificationWork.class).build();
+                    WorkManager.getInstance().enqueue(workRequest);
 
-                    currentTempText.setText(currentTemp);
+                    Log.d("TempThread", "Thread is alive, temperature is " + currentTemp + ", humidity is " + humidity);
+                    currentTempText.setText(currentTemp + "\u2103");
+                    waterTemp.setText(humidity + "%");
+                    changeTempIcon(Integer.parseInt(currentTemp));
                 } catch (Exception e) { e.printStackTrace(); }
             }
         }
     };
 
-    public static Context getThisContext() {
-        return thisContext;
+    public static void showOffReveal() {
+        currentTempText.setVisibility(View.VISIBLE);
+        waterTemp.setVisibility(View.VISIBLE);
+        circular_reveal_content.setVisibility(View.INVISIBLE);
+        heatingText.setVisibility(View.INVISIBLE);
+
+        String currentTemp = currentTempText.getText().toString().replace("℃", "");
+        Log.d("Fragment1_CurrentTemp", currentTemp);
+        changeTempIcon(Integer.parseInt(currentTemp));
     }
 
-    //    Croller croller;
-    Bitmap fireMap, snowMap;
-    Drawable fireDrawable, snowDrawable;
-    ImageView fireImage, snowImage;
-    TextView currentTempText, hopeTemp;
-    String arduinoID, userID;
-    static Context thisContext;
-    SeekBar seekBar;
-    View thumbView;
-    Drawable thumbDrawable;
-    FrameLayout circular_reveal_content;
+    private static void changeTempIcon(int temperature) {
+        if(temperature < 21) {
+            snowImage.setImageBitmap(null);
+            snowImage.setImageResource(R.drawable.snow);
+            fireImage.setVisibility(View.INVISIBLE);
+            snowImage.setVisibility(View.VISIBLE);
+        }
+        else {
+            fireImage.setImageBitmap(null);
+            fireImage.setImageResource(R.drawable.fire);
+            fireImage.setVisibility(View.VISIBLE);
+            snowImage.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private Bitmap fireMap, snowMap;
+    private Drawable fireDrawable, snowDrawable;
+    static ImageView fireImage, snowImage;
+    static TextView currentTempText, hopeTemp, heatingText, waterTemp;
+    private String arduinoID, userID;
+    private Context thisContext;
+    private SeekBar seekBar;
+    private View thumbView;
+    private Drawable thumbDrawable;
+    static FrameLayout circular_reveal_content;
+    private TempThread thread;
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 
+import com.example.wed01.Fragments.Fragment2New;
 import com.example.wed01.Fragments.Fragment4;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,7 @@ public class MainActivityB extends AppCompatActivity {
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
         fragment4 = new Fragment4();
+        fragment2_new = new Fragment2New();
 
         Intent prev = getIntent();
 
@@ -58,10 +60,10 @@ public class MainActivityB extends AppCompatActivity {
 
                     case R.id.tab2: {
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        Fragment fragment = Fragment2.newInstance(arduinoId);
+                        Fragment fragment = Fragment2New.newInstance(arduinoId);
                         fragmentTransaction.replace(R.id.frameLayout, fragment);
                         fragmentTransaction.commit();
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment2).commitAllowingStateLoss();
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment2_new).commitAllowingStateLoss();
 
                         return true;
                     }
@@ -93,11 +95,15 @@ public class MainActivityB extends AppCompatActivity {
 
     public static String getUserID() { return userID; }
 
+    public static String getArduinoId() { return arduinoId; }
+
     static String arduinoId;
     static String userID;
+
     BottomNavigationView bottomNavigationView;
     Fragment1 fragment1;
     Fragment2 fragment2;
     Fragment3 fragment3;
     Fragment4 fragment4;
+    Fragment2New fragment2_new;
 }

@@ -38,6 +38,16 @@ public class Fragment2 extends Fragment {
         return fragment2;
     }
 
+    public static Fragment2 newInstance(String arduinoID, String userID) {
+        Fragment2 fragment2 = new Fragment2();
+        Bundle bundle = new Bundle();
+        bundle.putString("ARDUINOID", arduinoID);
+        bundle.putString("USERID", userID);
+        fragment2.setArguments(bundle);
+
+        return fragment2;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,21 +62,29 @@ public class Fragment2 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment2, container, false);
 
+        Log.d("Fragment2", arduinoID);
+
         graphText = (TextView) viewGroup.findViewById(R.id.graphText);
         chart = (ValueLineChart) viewGroup.findViewById(R.id.chart);
 
         chart.clearChart();
 
-        GraphThread thread = new GraphThread();
-        thread.setDaemon(true);
+        thread = new GraphThread();
+//        thread.setDaemon(true);
         thread.start();
 
         return viewGroup;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        thread.interrupt();
+    }
+
     private void receiveRtData() {
         try {
-            AsyncHttp asyncHttp = new AsyncHttp("phone/data/1", new ContentValues(), "GET");
+            AsyncHttp asyncHttp = new AsyncHttp("phone/data/" + arduinoID, new ContentValues(), "GET");
             String result = asyncHttp.execute().get();
             JSONArray jsonArray = new JSONArray(result);
 
@@ -74,7 +92,7 @@ public class Fragment2 extends Fragment {
             series.setColor(0xff56b7f1);
 
             if (jsonArray.length() >= 10) {
-                for (int i = jsonArray.length() - 10; i < jsonArray.length()-1; i++) {
+                for (int i = jsonArray.length() - 10; i <= jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     time = object.getString("time");
                     humidity = BigDecimal.valueOf(object.getDouble("humidity")).floatValue();
@@ -83,7 +101,7 @@ public class Fragment2 extends Fragment {
                 }
             }
             else {
-                for(int i = 0; i < jsonArray.length()-1; i++) {
+                for(int i = 0; i <= jsonArray.length()-1; i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     time = object.getString("time");
                     humidity = BigDecimal.valueOf(object.getDouble("humidity")).floatValue();
@@ -124,4 +142,5 @@ public class Fragment2 extends Fragment {
     private String time;
     private ValueLineChart chart;
     private TextView graphText;
+    private GraphThread thread;
 }

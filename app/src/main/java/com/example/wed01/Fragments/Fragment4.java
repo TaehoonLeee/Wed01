@@ -64,7 +64,7 @@ public class Fragment4 extends Fragment {
         IDlinearlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetArduinoDialog bottomSheetArduinoDialog = BottomSheetArduinoDialog.getInstance(arduinoID, Fragment1.currentTempText.getText().toString().trim(), "0");
+                BottomSheetArduinoDialog bottomSheetArduinoDialog = BottomSheetArduinoDialog.getInstance(arduinoID, Fragment1.currentTempText.getText().toString().trim(), Fragment1.waterTemp.getText().toString().trim());
                 bottomSheetArduinoDialog.show(getActivity().getSupportFragmentManager(), "tag");
             }
         });
