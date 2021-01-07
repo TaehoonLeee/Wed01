@@ -1,8 +1,5 @@
-# Wed01
-
-## Smart Heater by using arduino.
-
-### This repository consists only Android.
+# Smart Heater Android application by using arduino.
+> 이 저장소는 안드로이드(자바)코드만 포함하고 있습니다.
 
 ### 아두이노 등록 및 전환
 ![아두이노 등록 및 전환](https://user-images.githubusercontent.com/48707020/103151810-c89fa580-47c4-11eb-99d0-0743d94f6307.gif)
